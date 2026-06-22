@@ -1,0 +1,83 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /Resources << /Font << /F1 5 0 R >> >> /MediaBox [0 0 595.28 841.89] /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 1779 >>
+stream
+BT
+/F1 24 Tf
+50 780 Td
+(Adesina Mark Omoniyi) Tj
+/F1 14 Tf
+0 -30 Td
+(Senior Software Engineer & Full Stack Developer) Tj
+/F1 10 Tf
+0 -25 Td
+(Email: mark.oadesina@gmail.com  |  GitHub: github.com/developerslearnit) Tj
+0 -15 Td
+(LinkedIn: linkedin.com/in/adesina-mark-omoniyi) Tj
+0 -30 Td
+(PROFESSIONAL SUMMARY) Tj
+/F1 10 Tf
+0 -20 Td
+(Senior Software Engineer / Full Stack Developer with over 12 years of professional experience) Tj
+0 -15 Td
+(specializing in ASP.NET Core, Cloud Native Architecture, Kubernetes, Azure cloud ecosystems,) Tj
+0 -15 Td
+(Azure OpenAI integrations, and React Native mobile development. Proven track record of) Tj
+0 -15 Td
+(designing and building high-scale enterprise applications, microservices platforms,) Tj
+0 -15 Td
+(and AI-driven intelligent workflows.) Tj
+/F1 14 Tf
+0 -30 Td
+(TECHNICAL SKILLS) Tj
+/F1 10 Tf
+0 -20 Td
+(- Languages & Frameworks: C#, .NET Core, ASP.NET Core, TypeScript, JavaScript, SQL) Tj
+0 -15 Td
+(- Cloud & DevOps: Azure, Kubernetes (AKS), Docker, CI/CD Pipelines, GitHub Actions) Tj
+0 -15 Td
+(- AI & Intelligence: Azure OpenAI, Semantic Kernel, Vector Search, Prompt Engineering) Tj
+0 -15 Td
+(- Mobile & Frontend: React Native, React.js, Expo, TypeScript, Tailwind CSS) Tj
+0 -15 Td
+(- Architecture: Microservices, Clean Architecture, DDD, CQRS, Event-Driven Systems) Tj
+/F1 14 Tf
+0 -30 Td
+(REPRESENTATIVE PROJECTS) Tj
+/F1 10 Tf
+0 -20 Td
+(1. Enterprise API Platform - High throughput ASP.NET Core APIs with Clean Architecture) Tj
+0 -15 Td
+(2. AI Integration Platform - Enterprise RAG application leveraging Azure OpenAI) Tj
+0 -15 Td
+(3. React Native Mobile App - High-speed offline syncing dashboard for iOS and Android) Tj
+0 -15 Td
+(4. Cloud Native Microservices Platform - Containerized microservices using AKS & RabbitMQ) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000247 00000 n 
+0000002078 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2148
+%%EOF

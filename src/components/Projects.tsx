@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Cpu, ChevronDown, ChevronUp } from 'lucide-react';
+import { ExternalLink, Cpu, ChevronDown, ChevronUp, X } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -11,11 +11,78 @@ interface Project {
   technologies: string[];
   architecture: string[];
   features?: string[];
-  githubUrl: string;
-  demoUrl: string;
+  githubUrl?: string;
+  demoUrl?: string;
 }
 
 const projectsData: Project[] = [
+  {
+    id: 'shopsphere-ecommerce',
+    title: 'ShopSphere: Enterprise Multi-Vendor Marketplace',
+    description: 'A premium, production-ready, multi-vendor e-commerce marketplace built on a high-performance decoupled architecture, leveraging distributed caching, background processing, and a dark-neon glassmorphic interface.',
+    image: '/shopsphere.png',
+    category: 'backend',
+    technologies: ['.NET 9', 'ASP.NET Core', 'Next.js 15', 'PostgreSQL', 'Redis', 'Quartz.NET', 'MediatR', 'Tailwind CSS 4', 'Zustand'],
+    features: [
+      'Multi-Vendor Architecture',
+      'Redis Distributed Cart',
+      'Quartz Billing Scheduler',
+      'Full-Text Search Indexing',
+    ],
+    architecture: [
+      'Decoupled architecture pairing a robust ASP.NET Core 9 Web API backend with a Next.js 15 frontend',
+      'CQRS pattern implementation using MediatR for clean separation of commands and queries',
+      'Distributed caching of product catalog responses and user cart sessions powered by Redis',
+      'Automated background jobs for billing and invoice processing orchestrated via Quartz.NET',
+      'PostgreSQL database utilizing full-text search indexing, audited entities, and soft deletes',
+      'Next.js 15 App Router client styled with modern glassmorphism, HSL custom palettes, and Zustand state',
+    ],
+    githubUrl: 'https://github.com/developerslearnit/shopsphere-ecommerce',
+  },
+  {
+    id: 'ai-workflow-agent',
+    title: 'IntelliFlow: AI Workflow Automation Platform',
+    description: 'A production-grade AI system for multi-step workflow automation, orchestrating complex business processes with intelligent decision-making agents, background ingestion tasks, and document reasoning capabilities.',
+    image: '/ai_workflow_agent.png',
+    category: 'ai',
+    technologies: ['.NET 9', 'ASP.NET Core', 'Next.js 15', 'Azure OpenAI', 'PostgreSQL', 'pgvector', 'Quartz.NET', 'Tailwind CSS 4', 'Framer Motion'],
+    features: [
+      'Multi-Step Workflow Engine',
+      'AI Agent Decision Orchestrator',
+      'Asynchronous Document Processing',
+      'Real-Time Monitoring Dashboard',
+    ],
+    architecture: [
+      'Clean Architecture structure (.NET 9) isolating Domain, Application, Infrastructure, and API layers',
+      'Agentic execution pipeline coordinating decision-making steps with Azure OpenAI',
+      'Scheduled background ingestion and processing jobs powered by Quartz.NET',
+      'Semantic document reasoning via PostgreSQL pgvector similarity search',
+      'Next.js 15 modern App Router interface with responsive dark-mode and fluid animations',
+    ],
+    githubUrl: 'https://github.com/developerslearnit/ai-workflow-agent-net',
+  },
+  {
+    id: 'ai-document-processor',
+    title: 'AI Document Processor & RAG System',
+    description: 'A production-grade AI system that allows users to upload documents and interact with them using natural language. Built with ASP.NET Core and Next.js, this system uses Retrieval-Augmented Generation (RAG) to deliver accurate, cost-efficient answers from large documents.',
+    image: '/ai_document_processor.png',
+    category: 'ai',
+    technologies: ['.NET 10', 'ASP.NET Core', 'Next.js 15', 'Azure OpenAI', 'PostgreSQL', 'pgvector', 'Tailwind CSS 4', 'Zustand'],
+    features: [
+      'Intelligent Ingestion Pipeline',
+      'Semantic Vector Search',
+      'AI Chat & Contextual Grounding',
+      'Multi-Tenant JWT Authentication',
+    ],
+    architecture: [
+      'Clean Architecture structure with separated Domain, Application, Infrastructure, and API layers',
+      'Asynchronous document ingestion pipeline extracting text, chunking content, and generating vector embeddings',
+      'High-performance vector similarity search using PostgreSQL with the pgvector extension',
+      'Contextual grounding logic using Azure OpenAI (GPT-4o) with adaptive prompt safety filters',
+      'Next.js 15 frontend with Zustand global state management and centralized API interceptors',
+    ],
+    githubUrl: 'https://github.com/developerslearnit/ai-document-processor-rag',
+  },
   {
     id: 'api-platform',
     title: 'Enterprise API Platform',
@@ -36,7 +103,7 @@ const projectsData: Project[] = [
     id: 'ai-platform',
     title: 'AI Integration Platform',
     description: 'An enterprise application enhanced with AI capabilities using Azure OpenAI to automate workflow decisions.',
-    image: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80',
+    image: '/ai_integration_platform.png',
     category: 'ai',
     technologies: ['Azure OpenAI', 'ASP.NET Core', 'React', 'Azure AI Search'],
     features: ['AI Assistant', 'Intelligent Automation', 'Smart Search', 'AI Recommendations'],
@@ -46,7 +113,6 @@ const projectsData: Project[] = [
       'Semantic Kernel framework orchestrating LLM Chat session tokens',
       'Adaptive prompt security filtering to prevent injection vectors',
     ],
-    githubUrl: 'https://github.com/developerslearnit',
     demoUrl: 'https://github.com',
   },
   {
@@ -64,7 +130,6 @@ const projectsData: Project[] = [
       'Secure Store module encrypting local API tokens and biometrics flags',
     ],
     githubUrl: 'https://github.com/developerslearnit',
-    demoUrl: 'https://github.com',
   },
   {
     id: 'microservices',
@@ -79,14 +144,13 @@ const projectsData: Project[] = [
       'Kubernetes AKS pod auto-scaling policies triggered by telemetry metrics',
       'Structured Centralized Logging utilizing Elastic Stack (ELK) endpoints',
     ],
-    githubUrl: 'https://github.com/developerslearnit',
-    demoUrl: 'https://github.com',
   },
 ];
 
 export const Projects: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'backend' | 'cloud' | 'ai' | 'mobile'>('all');
   const [showAll, setShowAll] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const categories = [
     { id: 'all', label: 'All Projects' },
@@ -107,6 +171,27 @@ export const Projects: React.FC = () => {
   });
 
   const visibleProjects = showAll ? filteredProjects : filteredProjects.slice(0, 2);
+
+  // Esc key closes modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedProject(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Disable scroll when modal is active
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedProject]);
 
   return (
     <section id="projects" className="py-24 relative overflow-hidden bg-black/10 border-t border-white/5">
@@ -150,7 +235,7 @@ export const Projects: React.FC = () => {
         </div>
 
         {/* Projects Grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <AnimatePresence mode="popLayout">
             {visibleProjects.map((project) => (
               <motion.div
@@ -160,8 +245,9 @@ export const Projects: React.FC = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.4 }}
+                className="h-full"
               >
-                <ProjectCard project={project} />
+                <ProjectCard project={project} onViewDetails={setSelectedProject} />
               </motion.div>
             ))}
           </AnimatePresence>
@@ -190,21 +276,183 @@ export const Projects: React.FC = () => {
         )}
 
       </div>
+
+      {/* Modal Preview Overlay */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedProject(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.92, opacity: 0, y: 15 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.92, opacity: 0, y: 15 }}
+              transition={{ type: "spring", damping: 25, stiffness: 250 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-2xl rounded-2xl glass-panel bg-[#0b0f19]/95 border border-white/10 shadow-2xl relative overflow-hidden flex flex-col max-h-[85vh] font-sans"
+            >
+              {/* Close Button */}
+              <button 
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 z-20 p-2 rounded-xl bg-slate-950/60 border border-white/10 text-slate-400 hover:text-white hover:bg-slate-900 transition-all focus:outline-none"
+                aria-label="Close details"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Scrollable details panel */}
+              <div className="overflow-y-auto">
+                
+                {/* Banner Image */}
+                <div className="relative h-56 sm:h-64 w-full overflow-hidden">
+                  <img 
+                    src={selectedProject.image} 
+                    alt={selectedProject.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-[#0b0f19]/30 to-transparent" />
+                  
+                  {/* Category badge */}
+                  <span className="absolute bottom-4 left-6 px-3 py-1 rounded-lg bg-primary-600 border border-primary-500 text-[10px] font-bold uppercase tracking-widest text-white">
+                    {selectedProject.category}
+                  </span>
+                </div>
+
+                {/* Content body */}
+                <div className="p-6 sm:p-8 space-y-6">
+                  
+                  {/* Title & Description */}
+                  <div className="space-y-2">
+                    <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-white">
+                      {selectedProject.title}
+                    </h3>
+                    <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                      {selectedProject.description}
+                    </p>
+                  </div>
+
+                  {/* Architecture Specs */}
+                  <div className="space-y-3">
+                    <h4 className="font-display font-bold text-xs text-slate-200 uppercase tracking-widest border-l-2 border-primary-500 pl-3">
+                      System Architecture Specifications
+                    </h4>
+                    <ul className="space-y-2.5 pl-4 list-disc text-xs text-slate-400 leading-relaxed">
+                      {selectedProject.architecture.map((spec, idx) => (
+                        <li key={idx}>{spec}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Features List (if available) */}
+                  {selectedProject.features && (
+                    <div className="space-y-3">
+                      <h4 className="font-display font-bold text-xs text-slate-200 uppercase tracking-widest border-l-2 border-primary-500 pl-3">
+                        Core Platform Capabilities
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-2">
+                        {selectedProject.features.map((feat) => (
+                          <div key={feat} className="flex items-center gap-2.5 text-xs text-slate-300">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                            <span>{feat}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Tech stack tags */}
+                  <div className="space-y-3">
+                    <h4 className="font-display font-bold text-xs text-slate-200 uppercase tracking-widest border-l-2 border-primary-500 pl-3">
+                      Technology Pipeline
+                    </h4>
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {selectedProject.technologies.map((tech) => (
+                        <span 
+                          key={tech} 
+                          className="text-[10px] px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/5 text-slate-300 font-semibold uppercase tracking-wider"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* Modal buttons footer */}
+              {(selectedProject.githubUrl || selectedProject.demoUrl) && (
+                <div className="p-4 sm:p-6 bg-black/40 border-t border-white/5 flex gap-4">
+                  {selectedProject.githubUrl && (
+                    <a
+                      href={selectedProject.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex justify-center items-center gap-2 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-xs font-semibold text-white transition-all"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="w-4 h-4"
+                      >
+                        <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                        <path d="M9 18c-4.51 2-5-2-7-2" />
+                      </svg>
+                      Inspect Source Code
+                    </a>
+                  )}
+                  {selectedProject.demoUrl && (
+                    <a
+                      href={selectedProject.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex justify-center items-center gap-2 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-xs font-semibold text-white transition-all shadow-lg shadow-primary-600/20 hover:shadow-glow-indigo"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Launch Live Demo
+                    </a>
+                  )}
+                </div>
+              )}
+
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
 
 // Subcomponent Project Card for state isolation
-const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
+interface ProjectCardProps {
+  project: Project;
+  onViewDetails: (project: Project) => void;
+}
+
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, onViewDetails }) => {
   const [showArch, setShowArch] = useState(false);
 
   const toggleArch = () => setShowArch(!showArch);
 
   return (
-    <div className="rounded-2xl glass-panel border border-white/10 overflow-hidden shadow-xl flex flex-col relative bg-[#0b0f19]/80 group">
+    <div className="h-full rounded-2xl glass-panel border border-white/10 overflow-hidden shadow-xl flex flex-col relative bg-[#0b0f19]/80 group">
       
       {/* Card Image Banner */}
-      <div className="relative h-48 sm:h-56 overflow-hidden">
+      <div 
+        onClick={() => onViewDetails(project)}
+        className="relative h-48 sm:h-56 overflow-hidden cursor-pointer"
+      >
         {/* Hover zoom filter */}
         <img 
           src={project.image} 
@@ -212,12 +460,23 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter brightness-90 group-hover:brightness-100"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] to-transparent opacity-60" />
+        
+        {/* Quick Preview overlay */}
+        <div className="absolute inset-0 bg-primary-600/20 backdrop-blur-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="px-4 py-2 rounded-xl bg-slate-900/80 border border-white/10 text-xs font-bold text-white shadow-lg flex items-center gap-1.5">
+            <Cpu className="w-3.5 h-3.5 text-primary-400 animate-pulse" />
+            Quick Preview
+          </span>
+        </div>
       </div>
 
       {/* Card Body */}
       <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
         <div className="space-y-3">
-          <h3 className="font-display font-bold text-xl text-white group-hover:text-primary-400 transition-colors">
+          <h3 
+            onClick={() => onViewDetails(project)}
+            className="font-display font-bold text-xl text-white hover:text-primary-400 cursor-pointer transition-colors"
+          >
             {project.title}
           </h3>
           
@@ -230,7 +489,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
             <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1.5">
               {project.features.map((feat) => (
                 <div key={feat} className="flex items-center gap-1.5 text-[11px] text-slate-300">
-                  <span className="w-1 h-1 rounded-full bg-emerald-500" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   <span>{feat}</span>
                 </div>
               ))}
@@ -283,39 +542,45 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
         </div>
 
         {/* Buttons footer */}
-        <div className="flex gap-4 pt-3">
-          <a
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-xs font-semibold text-white transition-all"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              width="16"
-              height="16"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-4 h-4"
-            >
-              <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-              <path d="M9 18c-4.51 2-5-2-7-2" />
-            </svg>
-            GitHub
-          </a>
-          <a
-            href={project.demoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-xs font-semibold text-white transition-all shadow-md shadow-primary-600/10"
-          >
-            <ExternalLink className="w-4 h-4" />
-            Live Demo
-          </a>
-        </div>
+        {(project.githubUrl || project.demoUrl) && (
+          <div className="flex gap-4 pt-3">
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-xs font-semibold text-white transition-all"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-4 h-4"
+                >
+                  <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                  <path d="M9 18c-4.51 2-5-2-7-2" />
+                </svg>
+                GitHub
+              </a>
+            )}
+            {project.demoUrl && (
+              <a
+                href={project.demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-xs font-semibold text-white transition-all shadow-md shadow-primary-600/10"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Live Demo
+              </a>
+            )}
+          </div>
+        )}
 
       </div>
 

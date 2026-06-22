@@ -102,11 +102,8 @@ export const Hero: React.FC = () => {
             </a>
 
             <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                alert("Resume download simulation triggered! Place your resume file under public/resume.pdf.");
-              }}
+              href="./Adesina_Mark_Omoniyi_Resume.pdf"
+              download="Adesina_Mark_Omoniyi_Resume.pdf"
               className="flex items-center gap-2 px-6 py-3.5 bg-transparent text-slate-400 hover:text-white font-semibold rounded-xl transition-all group"
             >
               <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
